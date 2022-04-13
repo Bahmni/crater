@@ -14,17 +14,15 @@ services:
     volumes:
       - ./:/var/www
       - ./docker-compose/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:rw,delegated
-    networks:
-      - crater
 
   db:
-    image: mariadb
+    image: mysql:5.7
     restart: always
-    volumes:
-      - db:/var/lib/mysql
-      # If you want to persist data on the host, comment the line above this one...
-      # and uncomment the line under this one.
-      #- ./docker-compose/db/data:/var/lib/mysql:rw,delegated
+    # volumes:
+    #   - db:/var/lib/mysql
+    # If you want to persist data on the host, comment the line above this one...
+    # and uncomment the line under this one.
+    # - ./docker-compose/db/data:/var/lib/mysql:rw,delegated
     environment:
       MYSQL_USER: crater
       MYSQL_PASSWORD: crater
@@ -32,19 +30,15 @@ services:
       MYSQL_ROOT_PASSWORD: crater
     ports:
       - '33006:3306'
-    networks:
-      - crater
 
   nginx:
     image: nginx:1.17-alpine
     restart: unless-stopped
     ports:
-      - 80:80
+      - 81:80
     volumes:
       - ./:/var/www
       - ./docker-compose/nginx:/etc/nginx/conf.d/
-    networks:
-      - crater
 
   cron:
     build:
@@ -52,12 +46,65 @@ services:
       dockerfile: ./docker-compose/cron.dockerfile
     volumes:
       - ./:/var/www
-    networks:
-      - crater
+
+  proxy:
+    image: 'bahmni/proxy:${PROXY_IMAGE_TAG:?}'
+    volumes:
+      # - ${CERTIFICATE_PATH}:/etc/tls
+      - 'bahmni-patient-images:/home/bahmni/patient_images'
+      - 'bahmni-document-images:/home/bahmni/document_images'
+    ports:
+      - '80:80'
+      - '443:443'
+
+  openmrs:
+    profiles: ['default', 'openmrs']
+    image: bahmni/openmrs:${OPENMRS_IMAGE_TAG:?}
+    environment:
+      DB_DATABASE: ${OPENMRS_DB_NAME:?}
+      DB_HOST: ${OPENMRS_DB_HOST:?}
+      DB_USERNAME: ${OPENMRS_DB_USERNAME:?}
+      DB_PASSWORD: ${OPENMRS_DB_PASSWORD:?}
+      DB_CREATE_TABLES: ${OPENMRS_DB_CREATE_TABLES}
+      DB_AUTO_UPDATE: ${OPENMRS_DB_AUTO_UPDATE}
+      MODULE_WEB_ADMIN: ${OPENMRS_MODULE_WEB_ADMIN}
+      DEBUG: ${OPENMRS_DEBUG}
+    ports:
+      - '8080:8080'
+    volumes:
+      - 'openmrs-data:/usr/local/tomcat/.OpenMRS/modules'
+      # - "${BAHMNI_OPENMRS_MODULES_PATH:?}/:/usr/local/tomcat/.OpenMRS/modules/"
+      # - "${BAHMNI_CONFIG_PATH:?}/:/etc/bahmni_config/"
+      - 'bahmni-patient-images:/home/bahmni/patient_images'
+      - 'bahmni-document-images:/home/bahmni/document_images'
+    depends_on:
+      - openmrsdb
+
+  openmrsdb:
+    image: bahmni/openmrs-db:${OPENMRS_DB_IMAGE_TAG:?}
+    restart: always
+    profiles: ['default', 'openmrs']
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?}
+      MYSQL_DATABASE: ${OPENMRS_DB_NAME:?}
+      MYSQL_USER: ${OPENMRS_DB_USERNAME:?}
+      MYSQL_PASSWORD: ${OPENMRS_DB_PASSWORD:?}
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'openmrsdbdata:/var/lib/mysql'
+
+  bahmni-web:
+    image: bahmni/bahmni-web:${BAHMNI_WEB_IMAGE_TAG:?}
+    profiles: ['default', 'openmrs']
+    # volumes:
+    # - "${BAHMNI_APPS_PATH:?}/ui/app/:/usr/local/apache2/htdocs/bahmni"
+    # - "${BAHMNI_APPS_PATH:?}/ui/node_modules/@bower_components/:/usr/local/apache2/htdocs/bahmni/components"
+    # - "${BAHMNI_CONFIG_PATH:?}/:/usr/local/apache2/htdocs/bahmni_config/"
 
 volumes:
+  openmrs-data:
+  openmrsdbdata:
+  bahmni-patient-images:
+  bahmni-document-images:
   db:
-
-networks:
-  crater:
-    driver: bridge
