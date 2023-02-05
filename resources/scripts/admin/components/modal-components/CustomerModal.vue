@@ -56,7 +56,10 @@
                 />
               </BaseInputGroup>
 
-              <BaseInputGroup :label="$t('customers.primary_contact_name')">
+              <BaseInputGroup :label="$t('customers.primary_contact_name')" :error="
+                v$.primaryContactName.$error &&
+                v$.primaryContactName.$errors[0].$message
+              ">
                 <BaseInput
                   v-model="customerStore.currentCustomer.contact_name"
                   type="text"
@@ -94,7 +97,12 @@
               </BaseInputGroup>
 
               <BaseInputGrid>
-                <BaseInputGroup :label="$t('customers.phone')">
+                <BaseInputGroup :label="$t('customers.phone')"  
+                :error="
+                v$.phone.$error &&
+                v$.phone.$errors[0].$message
+              "
+              >
                   <BaseInput
                     v-model.trim="customerStore.currentCustomer.phone"
                     type="text"
@@ -208,7 +216,10 @@
 
           <BaseTab :title="$t('customers.billing_address')" class="!mt-2">
             <BaseInputGrid layout="one-column">
-              <BaseInputGroup :label="$t('customers.name')">
+              <BaseInputGroup :label="$t('customers.name')"  :error="
+                v$.billing.name.$error &&
+                v$.billing.name.$errors[0].$message
+              ">
                 <BaseInput
                   v-model="customerStore.currentCustomer.billing.name"
                   type="text"
@@ -240,7 +251,10 @@
                 />
               </BaseInputGroup>
 
-              <BaseInputGroup :label="$t('customers.city')">
+              <BaseInputGroup :label="$t('customers.city')"  :error="
+                v$.billing.city.$error &&
+                v$.billing.city.$errors[0].$message
+              ">
                 <BaseInput
                   v-model="customerStore.currentCustomer.billing.city"
                   type="text"
@@ -289,7 +303,10 @@
                 />
               </BaseInputGroup>
 
-              <BaseInputGroup :label="$t('customers.phone')">
+              <BaseInputGroup :label="$t('customers.phone')"   :error="
+                v$.billing.phone.$error &&
+                v$.billing.phone.$errors[0].$message
+              ">
                 <BaseInput
                   v-model.trim="customerStore.currentCustomer.billing.phone"
                   type="text"
@@ -298,7 +315,10 @@
                 />
               </BaseInputGroup>
 
-              <BaseInputGroup :label="$t('customers.zip_code')">
+              <BaseInputGroup :label="$t('customers.zip_code')" :error="
+                v$.billing.zipCode.$error &&
+                v$.billing.zipCode.$errors[0].$message
+              ">
                 <BaseInput
                   v-model="customerStore.currentCustomer.billing.zip"
                   type="text"
@@ -323,7 +343,10 @@
             </div>
 
             <BaseInputGrid layout="one-column">
-              <BaseInputGroup :label="$t('customers.name')">
+              <BaseInputGroup :label="$t('customers.name')" :error="
+                v$.shipping.name.$error &&
+                v$.shipping.name.$errors[0].$message
+              ">
                 <BaseInput
                   v-model="customerStore.currentCustomer.shipping.name"
                   type="text"
@@ -346,7 +369,10 @@
                 />
               </BaseInputGroup>
 
-              <BaseInputGroup :label="$t('customers.state')">
+              <BaseInputGroup :label="$t('customers.state')" :error="
+                v$.shipping.state.$error &&
+                v$.shipping.state.$errors[0].$message
+              ">
                 <BaseInput
                   v-model="customerStore.currentCustomer.shipping.state"
                   type="text"
@@ -355,7 +381,10 @@
                 />
               </BaseInputGroup>
 
-              <BaseInputGroup :label="$t('customers.city')">
+              <BaseInputGroup :label="$t('customers.city')" :error="
+                v$.shipping.city.$error &&
+                v$.shipping.city.$errors[0].$message
+              ">
                 <BaseInput
                   v-model="customerStore.currentCustomer.shipping.city"
                   type="text"
@@ -404,7 +433,10 @@
                 />
               </BaseInputGroup>
 
-              <BaseInputGroup :label="$t('customers.phone')">
+              <BaseInputGroup :label="$t('customers.phone')" :error="
+                v$.shipping.phone.$error &&
+                v$.shipping.phone.$errors[0].$message
+              ">
                 <BaseInput
                   v-model.trim="customerStore.currentCustomer.shipping.phone"
                   type="text"
@@ -413,7 +445,10 @@
                 />
               </BaseInputGroup>
 
-              <BaseInputGroup :label="$t('customers.zip_code')">
+              <BaseInputGroup :label="$t('customers.zip_code')" :error="
+                v$.shipping.zipCode.$error &&
+                v$.shipping.zipCode.$errors[0].$message
+              ">
                 <BaseInput
                   v-model="customerStore.currentCustomer.shipping.zip"
                   type="text"
@@ -462,11 +497,12 @@ import {
   minLength,
   maxLength,
   email,
-  alpha,
   url,
   helpers,
   requiredIf,
   sameAs,
+  alphaNum,
+  numeric
 } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 
@@ -488,6 +524,7 @@ const companyStore = useCompanyStore()
 const globalStore = useGlobalStore()
 const invoiceStore = useInvoiceStore()
 const notificationStore = useNotificationStore()
+const alpha = helpers.regex(/^[a-z A-Z]*$/)
 
 let isFetchingInitialData = ref(false)
 
@@ -510,7 +547,15 @@ const rules = computed(() => {
         t('validation.name_min_length', { count: 3 }),
         minLength(3)
       ),
-    },
+       alpha: helpers.withMessage(t('validation.characters_only'), alpha)
+      },
+      primaryContactName: {
+        alpha: helpers.withMessage(t('validation.characters_only'), alpha)
+      },
+      phone:{
+        numeric: helpers.withMessage(t('validation.numbers_only'), numeric)
+      },
+  
     currency_id: {
       required: helpers.withMessage(t('validation.required'), required),
     },
@@ -545,6 +590,7 @@ const rules = computed(() => {
         t('validation.name_min_length', { count: 3 }),
         minLength(3)
       ),
+    alphaNum : helpers.withMessage(t('validation.characters_only'), alphaNum)
     },
     website: {
       url: helpers.withMessage(t('validation.invalid_url'), url),
@@ -556,27 +602,61 @@ const rules = computed(() => {
           t('validation.address_maxlength', { count: 255 }),
           maxLength(255)
         ),
+      alphaNum: helpers.withMessage(t('validation.characters_only'), alphaNum)
       },
       address_street_2: {
         maxLength: helpers.withMessage(
           t('validation.address_maxlength', { count: 255 }),
           maxLength(255)
         ),
+         alphaNum : helpers.withMessage(t('validation.characters_only'), alphaNum)
       },
+       name: {
+          alpha: helpers.withMessage(t('validation.characters_only'), alpha)
+        },
+        state: {
+          alpha: helpers.withMessage(t('validation.characters_only'), alpha)
+        },
+        city: {
+          alpha: helpers.withMessage(t('validation.characters_only'), alpha)
+        },
+        zipCode: {
+          numeric: helpers.withMessage(t('validation.numbers_only'), numeric)
+        },
+        phone:{
+          numeric: helpers.withMessage(t('validation.numbers_only'), numeric)
+        },
     },
 
     shipping: {
+       name: {
+          alpha: helpers.withMessage(t('validation.characters_only'), alpha)
+        },
+        state: {
+          alpha: helpers.withMessage(t('validation.characters_only'), alpha)
+        },
+        city: {
+          alpha: helpers.withMessage(t('validation.characters_only'), alpha)
+        },
+        zipCode: {
+          numeric: helpers.withMessage(t('validation.numbers_only'), numeric)
+        },
+        phone:{
+          numeric: helpers.withMessage(t('validation.numbers_only'), numeric)
+        },
       address_street_1: {
         maxLength: helpers.withMessage(
           t('validation.address_maxlength', { count: 255 }),
           maxLength(255)
         ),
+        alphaNum: helpers.withMessage(t('validation.characters_only'), alphaNum)
       },
       address_street_2: {
         maxLength: helpers.withMessage(
           t('validation.address_maxlength', { count: 255 }),
           maxLength(255)
         ),
+        alphaNum: helpers.withMessage(t('validation.characters_only'), alphaNum)
       },
     },
   }
