@@ -1,7 +1,8 @@
 FROM php:8.0-fpm-alpine
 
 RUN apk add --no-cache \
-    php8-bcmath
+    php8-bcmath \
+    tzdata
 
 RUN docker-php-ext-install pdo pdo_mysql bcmath
 
