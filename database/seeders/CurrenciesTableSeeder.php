@@ -25,6 +25,17 @@ class CurrenciesTableSeeder extends Seeder
                     'decimal_separator' => '.',
                 ],
                 [
+                    'name' => 'Ugandan Shilling',
+                    'code' => 'UGX',
+                    'symbol' => '/=',
+                    'precision' => 0,
+                    'thousand_separator' => ',',
+                    'decimal_separator' => '.',
+                    'symbol_first' => false,
+                    'enabled' => true,
+                ],
+
+                [
                     'name' => 'British Pound',
                     'code' => 'GBP',
                     'symbol' => '£',
