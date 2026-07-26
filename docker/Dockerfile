@@ -1,4 +1,4 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.3-fpm-alpine
 
 ENV user=crater-user
 ENV uid=1000
@@ -7,9 +7,9 @@ ENV uid=1000
 RUN apk update && apk add --no-cache apk-tools
 
 # Install system dependencies
-RUN apk update && apk add --no-cache --virtual \
-    git=2.39.1-r0 \
-    curl=8.5.0-r0 \
+RUN apk update && apk add --no-cache --upgrade --virtual \
+    git \
+    curl \
     libpng-dev \
     oniguruma-dev \
     libxml2-dev \
