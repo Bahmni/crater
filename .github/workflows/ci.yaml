@@ -23,7 +23,7 @@ jobs:
         extensions: exif
 
     - name: Install dependencies
-      run: composer install --no-interaction --no-progress
+      run: composer install --ignore-platform-req=php --no-interaction --no-progress
 
     - name: Check coding style
       run: ./vendor/bin/php-cs-fixer fix -v --dry-run --using-cache=no --config=.php-cs-fixer.dist.php
