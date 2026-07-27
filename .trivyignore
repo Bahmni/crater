@@ -1,0 +1,4 @@
+# crater-php (12 CVEs) + crater-nginx (3 CVEs) = 15 CRITICAL CVEs unfixed
+# PHP 8.2.31 still contains 12 CVEs - requires further investigation
+# nginx 1.30.4 still contains 3 CVEs - requires further investigation
+# Deferred for future patch releases
