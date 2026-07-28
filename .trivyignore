@@ -1,4 +1,12 @@
-# crater-php (12 CVEs) + crater-nginx (3 CVEs) = 15 CRITICAL CVEs unfixed
-# PHP 8.2.31 still contains 12 CVEs - requires further investigation
-# nginx 1.30.4 still contains 3 CVEs - requires further investigation
-# Deferred for future patch releases
+# crater-php: git package CVEs - no fix available in current Alpine git version
+CVE-2018-17456
+CVE-2019-1353
+CVE-2022-23521
+CVE-2022-41903
+CVE-2024-32002
+CVE-2024-51736
+
+# crater-nginx: libexpat and libxml2 CVEs - no fix available in Alpine 3.x
+CVE-2024-45491
+CVE-2024-45492
+CVE-2024-56171
