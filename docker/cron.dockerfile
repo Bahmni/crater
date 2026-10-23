@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine
+FROM php:8.2.35-fpm-alpine
 
 RUN apk add --no-cache \
     php8-bcmath
