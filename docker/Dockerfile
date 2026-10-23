@@ -47,6 +47,7 @@ RUN chmod -R 775 /var/www/bootstrap
 WORKDIR /var/www
 
 RUN curl -o wait-for.sh 'https://raw.githubusercontent.com/eficode/wait-for/v2.2.3/wait-for'
+RUN composer require barryvdh/laravel-dompdf:^3.1 guzzlehttp/psr7:^2.6.3 --with-all-dependencies
 RUN composer update
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 COPY docker/start.sh start.sh
