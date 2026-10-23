@@ -1,4 +1,4 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.2.35-fpm-alpine
 
 ENV user=crater-user
 ENV uid=1000
@@ -8,8 +8,8 @@ RUN apk update && apk add --no-cache apk-tools
 
 # Install system dependencies
 RUN apk update && apk add --no-cache --virtual \
-    git=2.39.1-r0 \
-    curl=8.5.0-r0 \
+    git \
+    curl \
     libpng-dev \
     oniguruma-dev \
     libxml2-dev \
@@ -49,7 +49,6 @@ WORKDIR /var/www
 RUN curl -o wait-for.sh 'https://raw.githubusercontent.com/eficode/wait-for/v2.2.3/wait-for'
 RUN composer update
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
-RUN composer require guzzlehttp/psr7:2.4.5
 COPY docker/start.sh start.sh
 RUN chmod +x start.sh
 RUN chmod +x wait-for.sh
