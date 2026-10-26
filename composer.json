@@ -86,14 +86,16 @@
     "allow-plugins": {
       "pestphp/pest-plugin": true
     },
-    "audit": {
-      "ignore": {
-        "PKSA-cv56-2228-pzr6": "dompdf 2.x is the latest allowed by laravel-dompdf ^2 (Laravel 8); fixed in dompdf 3.1.6 which needs Laravel 9+. Follow-up to BAH-5238.",
-        "PKSA-6r8f-nxsb-67bq": "dompdf 2.x is the latest allowed by laravel-dompdf ^2 (Laravel 8); fixed in dompdf 3.1.6 which needs Laravel 9+. Follow-up to BAH-5238.",
-        "PKSA-gh7h-hhy4-byg7": "dompdf 2.x is the latest allowed by laravel-dompdf ^2 (Laravel 8); fixed in dompdf 3.1.6 which needs Laravel 9+. Follow-up to BAH-5238.",
-        "PKSA-mwt3-h9tv-kx78": "dompdf 2.x is the latest allowed by laravel-dompdf ^2 (Laravel 8); fixed in dompdf 3.1.6 which needs Laravel 9+. Follow-up to BAH-5238.",
-        "PKSA-hp6n-n4kz-21wk": "dompdf 2.x is the latest allowed by laravel-dompdf ^2 (Laravel 8); fixed in dompdf 3.1.6 which needs Laravel 9+. Follow-up to BAH-5238.",
-        "PKSA-mckv-s5hg-868k": "dompdf 2.x is the latest allowed by laravel-dompdf ^2 (Laravel 8); fixed in dompdf 3.1.6 which needs Laravel 9+. Follow-up to BAH-5238."
+    "policy": {
+      "advisories": {
+        "ignore-id": {
+          "PKSA-cv56-2228-pzr6": "dompdf 2.x is the latest allowed by laravel-dompdf ^2 (Laravel 8); fixed in dompdf 3.1.6 which needs Laravel 9+. Follow-up to BAH-5238.",
+          "PKSA-6r8f-nxsb-67bq": "dompdf 2.x is the latest allowed by laravel-dompdf ^2 (Laravel 8); fixed in dompdf 3.1.6 which needs Laravel 9+. Follow-up to BAH-5238.",
+          "PKSA-gh7h-hhy4-byg7": "dompdf 2.x is the latest allowed by laravel-dompdf ^2 (Laravel 8); fixed in dompdf 3.1.6 which needs Laravel 9+. Follow-up to BAH-5238.",
+          "PKSA-mwt3-h9tv-kx78": "dompdf 2.x is the latest allowed by laravel-dompdf ^2 (Laravel 8); fixed in dompdf 3.1.6 which needs Laravel 9+. Follow-up to BAH-5238.",
+          "PKSA-hp6n-n4kz-21wk": "dompdf 2.x is the latest allowed by laravel-dompdf ^2 (Laravel 8); fixed in dompdf 3.1.6 which needs Laravel 9+. Follow-up to BAH-5238.",
+          "PKSA-mckv-s5hg-868k": "dompdf 2.x is the latest allowed by laravel-dompdf ^2 (Laravel 8); fixed in dompdf 3.1.6 which needs Laravel 9+. Follow-up to BAH-5238."
+        }
       }
     }
   },
